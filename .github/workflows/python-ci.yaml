@@ -21,14 +21,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest pytest-cov
           pip install poetry
+
+
+
       - name: Run Tests
         run: pytest --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+
       - name: Build
         working-directory: my_package
         run: poetry build
 
   PublishPackage:
     runs-on: ubuntu-latest
+    needs: PythonVersionSetup
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,3 +53,4 @@ jobs:
           poetry config repositories.cspark https://gitlab.com/api/v4/projects/61532089/packages/pypi
           poetry config http-basic.cspark cspark_user ${{ secrets.PYPI_TOKEN }}
           poetry publish -r cspark
+ 
